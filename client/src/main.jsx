@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import "./styles.css";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://ride-compare-app.onrender.com/api";
 
 const transportTypes = [
   { id: "all", label: "All", icon: Sparkles },
