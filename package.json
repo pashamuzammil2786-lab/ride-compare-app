@@ -22,6 +22,8 @@
     "client": "npm --prefix client run dev",
     "install:all": "npm install && npm --prefix server install && npm --prefix client install",
     "test": "vitest run --passWithNoTests",
+    "tsc": "tsc --noEmit",
+    "typescript": "tsc --noEmit",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

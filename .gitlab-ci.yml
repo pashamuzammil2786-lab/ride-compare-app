@@ -8,22 +8,31 @@ default:
   before_script:
     - npm run install:all
 
-lint:
+eslint:
   stage: quality
   script:
     - npm run lint:eslint
+
+biome:
+  stage: quality
+  script:
     - npm run biome
+
+knip:
+  stage: quality
+  script:
     - npm run knip
 
-format:
+prettier:
   stage: quality
   script:
     - npm run format
 
-typecheck:
+typescript:
   stage: quality
   script:
-    - npm run typecheck
+    - npm run typescript
+    - npx tsc --noEmit
 
 test:
   stage: test
