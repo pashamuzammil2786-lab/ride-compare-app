@@ -11,7 +11,19 @@ default:
 lint:
   stage: quality
   script:
-    - npm run lint
+    - npm run lint:eslint
+    - npm run biome
+    - npm run knip
+
+format:
+  stage: quality
+  script:
+    - npm run format
+
+typecheck:
+  stage: quality
+  script:
+    - npm run typecheck
 
 test:
   stage: test
@@ -22,7 +34,8 @@ test:
 dependency_audit:
   stage: security
   script:
-    - npm run audit
+    - npm audit --audit-level=high
+    - npm run dependency:audit
 
 secret_scan:
   stage: security

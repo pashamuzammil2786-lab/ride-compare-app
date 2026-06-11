@@ -6,19 +6,23 @@
   "license": "AGPL-3.0-only",
   "scripts": {
     "audit": "npm audit --audit-level=high",
+    "biome": "biome check .",
     "changelog": "git-cliff -o CHANGELOG.md",
     "coverage": "vitest run --coverage --passWithNoTests",
+    "dependency:audit": "npm audit --audit-level=high",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "format": "prettier --check .",
     "format:write": "prettier --write .",
     "knip": "knip",
-    "lint": "eslint . && prettier --check . && biome check . && oxlint .",
+    "lint": "eslint . && prettier --check . && npm run biome && oxlint .",
+    "lint:eslint": "eslint .",
     "prepare": "husky",
     "secrets": "gitleaks detect --source . --redact",
     "server": "npm --prefix server run dev",
     "client": "npm --prefix client run dev",
     "install:all": "npm install && npm --prefix server install && npm --prefix client install",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -31,6 +35,7 @@
     "knip": "^5.61.2",
     "oxlint": "^0.16.8",
     "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
     "vitest": "^3.2.3"
   }
 }
