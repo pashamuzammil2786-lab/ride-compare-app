@@ -1,0 +1,8 @@
+title = "FareFinder secret scanning rules"
+
+[allowlist]
+description = "Allow documented placeholders only"
+regexes = [
+  '''change-this-secret-in-production''',
+  '''replace-with-local-password'''
+]
