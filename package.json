@@ -1,14 +1,43 @@
 {
   "name": "ride-compare-app",
+  "description": "FareFinder is a ride and shopping comparison app for comparing estimated fares and product deals before opening provider platforms.",
   "version": "1.0.0",
   "private": true,
+  "license": "AGPL-3.0-only",
   "scripts": {
+    "audit": "npm audit --audit-level=high",
+    "biome": "biome check .",
+    "changelog": "git-cliff -o CHANGELOG.md",
+    "coverage": "vitest run --coverage --passWithNoTests",
+    "dependency:audit": "npm audit --audit-level=high",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "knip": "knip",
+    "lint": "eslint . && prettier --check . && npm run biome && oxlint .",
+    "lint:eslint": "eslint .",
+    "prepare": "husky",
+    "secrets": "gitleaks detect --source . --redact",
     "server": "npm --prefix server run dev",
     "client": "npm --prefix client run dev",
-    "install:all": "npm install && npm --prefix server install && npm --prefix client install"
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "test": "vitest run --passWithNoTests",
+    "tsc": "tsc --noEmit",
+    "typescript": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "@biomejs/biome": "^1.9.4",
+    "@eslint/js": "^9.29.0",
+    "@vitest/coverage-v8": "^3.2.3",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.29.0",
+    "git-cliff": "^2.8.0",
+    "husky": "^9.1.7",
+    "knip": "^5.61.2",
+    "oxlint": "^0.16.8",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.3"
   }
 }

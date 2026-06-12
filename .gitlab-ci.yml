@@ -1,0 +1,56 @@
+stages:
+  - quality
+  - test
+  - security
+
+default:
+  image: node:22-alpine
+  before_script:
+    - npm run install:all
+
+eslint:
+  stage: quality
+  script:
+    - npm run lint:eslint
+
+biome:
+  stage: quality
+  script:
+    - npm run biome
+
+knip:
+  stage: quality
+  script:
+    - npm run knip
+
+prettier:
+  stage: quality
+  script:
+    - npm run format
+
+typescript:
+  stage: quality
+  script:
+    - npm run typescript
+    - npx tsc --noEmit
+
+test:
+  stage: test
+  script:
+    - npm run test
+    - npm run coverage
+
+dependency_audit:
+  stage: security
+  script:
+    - npm audit --audit-level=high
+    - npm run dependency:audit
+
+secret_scan:
+  stage: security
+  image:
+    name: zricethezav/gitleaks:latest
+    entrypoint: [""]
+  before_script: []
+  script:
+    - gitleaks detect --source . --redact

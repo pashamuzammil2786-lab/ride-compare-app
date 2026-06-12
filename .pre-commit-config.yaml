@@ -1,0 +1,37 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.27.2
+    hooks:
+      - id: gitleaks
+  - repo: local
+    hooks:
+      - id: eslint
+        name: eslint
+        entry: npm run lint:eslint
+        language: system
+        pass_filenames: false
+      - id: biome
+        name: biome
+        entry: npm run biome
+        language: system
+        pass_filenames: false
+      - id: typescript
+        name: typescript
+        entry: npm run typescript
+        language: system
+        pass_filenames: false
+      - id: tsc
+        name: tsc --noEmit
+        entry: npm run tsc
+        language: system
+        pass_filenames: false
