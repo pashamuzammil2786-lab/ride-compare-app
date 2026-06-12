@@ -6,29 +6,47 @@ RideCompare
 
 ## Project Idea
 
-RideCompare is a ride-hailing comparison web application. The goal is to reduce the time users spend opening multiple ride apps like Rapido, Uber, Ola, Namma Yatri, and inDrive to compare prices manually.
+RideCompare is a two-in-one comparison platform. It helps users compare ride-hailing options and e-commerce product options before opening the original app or website.
 
-The user enters a pickup location, destination, and preferred transport type. The app compares estimated ride options and shows the cheapest or most suitable ride. When the user clicks the booking button, the original provider website/app is opened so the user can complete the booking there.
+The app has two main modules after login:
+
+1. Ride Compare
+2. E-commerce Compare
 
 ## Problem Statement
 
-Users often need to open many ride-hailing apps separately to check which one is cheaper or faster. This wastes time and makes price comparison difficult.
+Users often open many apps to compare prices manually.
 
-RideCompare solves this by showing multiple ride options in one place.
+For rides, users open Rapido, Ola, Uber, and other apps to check the cheapest or fastest ride.
+
+For shopping, users open Amazon, Flipkart, and Meesho to compare product price, rating, and availability.
+
+RideCompare reduces this manual work by showing comparison results in one interface.
 
 ## Target Users
 
 - Students
 - Office commuters
 - Daily travelers
-- Budget-conscious users
-- Users who compare prices before booking rides
+- Budget-conscious shoppers
+- Users who compare prices before booking rides or buying products
+
+## User Flow
+
+1. User opens the website.
+2. User logs in or signs up.
+3. User sees two options:
+   - Ride Compare
+   - E-commerce
+4. User selects a module.
+5. App shows comparison results.
+6. User opens the original provider app or marketplace to complete booking or purchase.
 
 ## Main Features
 
 ### 1. Home Page
 
-The website starts with a home page that introduces the app and provides Login and Signup buttons.
+The public home page introduces the app as a ride and shopping comparison platform. It includes Login and Signup buttons.
 
 ### 2. User Authentication
 
@@ -39,37 +57,29 @@ Current behavior:
 - If MySQL is connected, user data is stored in MySQL.
 - If MySQL is not connected, the app uses demo memory storage.
 
-### 3. Pickup and Destination Input
+### 3. Module Menu
+
+After login, users choose:
+
+- Ride Compare
+- E-commerce
+
+### 4. Ride Compare
 
 Users can enter:
 
 - Pickup location
 - Destination location
+- Ride type
 
-The app also provides location suggestions while typing.
-
-Example:
-
-If the user types `med`, the app can suggest:
-
-- Mehdipatnam, Hyderabad
-- Mehdipatnam Bus Stop, Hyderabad
-- Mehdipatnam Rythu Bazaar, Hyderabad
-
-### 4. Transport Type Selection
-
-Users can select the type of ride they want:
+Ride type options:
 
 - All
 - Bike
 - Auto
 - Car
 
-If the user selects Auto, only auto ride options are shown.
-
-### 5. Ride Comparison Results
-
-The app shows the top ride options with:
+Ride results show:
 
 - Provider name
 - Ride type
@@ -79,9 +89,50 @@ The app shows the top ride options with:
 - Cheapest ride badge
 - Open provider button
 
-### 6. Booking Handoff
+The app supports Hyderabad-focused location suggestions and a current-location pickup button.
 
-When the user clicks `Open Rapido`, `Open Uber`, or another provider, the provider website/app opens. The user completes the final booking on the original provider platform.
+### 5. E-commerce Compare
+
+Users can search products by:
+
+- Product name
+- Uploaded product photo
+
+Users can choose size:
+
+- Any
+- Small
+- Medium
+- Large
+- XL
+- XXL
+
+E-commerce results show:
+
+- Marketplace name
+- Estimated product price
+- Rating
+- Review count
+- Quality score
+- Cheapest product badge
+- Best quality marketplace
+- Open marketplace button
+
+Supported marketplaces:
+
+- Amazon
+- Flipkart
+- Meesho
+
+### 6. Photo Upload Search
+
+Photo upload currently uses keyword-based detection. For example, a striped polo/t-shirt photo is converted into a shopping query like:
+
+```text
+men navy blue white brown striped polo t shirt
+```
+
+The user can edit the detected keywords before comparing.
 
 ## Tech Stack
 
@@ -121,10 +172,12 @@ ride-compare-app
 │   └── src
 │       ├── auth.js
 │       ├── db.js
+│       ├── ecommerce.js
 │       ├── index.js
 │       └── rides.js
 ├── package.json
-└── PROJECT_SPEC.md
+├── PROJECT_SPEC.md
+└── README.md
 ```
 
 ## Frontend Explanation
@@ -140,10 +193,13 @@ This file controls:
 - Home page
 - Login page
 - Signup page
+- Logged-in module menu
 - Ride search form
-- Transport type buttons
-- Place suggestions
+- E-commerce search form
+- Photo upload preview
+- Size selection
 - Ride result cards
+- Product result cards
 
 Main styling file:
 
@@ -151,7 +207,7 @@ Main styling file:
 client/src/styles.css
 ```
 
-This file controls the layout, colors, buttons, cards, home page, auth page, and ride results design.
+This file controls the layout, colors, buttons, forms, cards, home page, auth page, ride results, and product results.
 
 ## Backend Explanation
 
@@ -170,6 +226,7 @@ GET  /api/health
 POST /api/auth/register
 POST /api/auth/login
 POST /api/rides/compare
+POST /api/ecommerce/compare
 ```
 
 Authentication file:
@@ -194,12 +251,28 @@ server/src/rides.js
 
 This handles:
 
-- Provider data
+- Ride provider data
 - Ride modes
+- Hyderabad area matching
 - Fare estimate calculation
 - Transport type filtering
 - Cheapest ride sorting
 - Booking link generation
+
+E-commerce comparison file:
+
+```text
+server/src/ecommerce.js
+```
+
+This handles:
+
+- Marketplace data
+- Product query normalization
+- Photo keyword fallback
+- Product price estimate calculation
+- Rating and quality score estimate
+- Marketplace search link generation
 
 Database file:
 
@@ -242,7 +315,7 @@ Stores user account data:
 
 ### ride_searches Table
 
-Stores user search history:
+Stores user ride search data:
 
 - id
 - user_id
@@ -252,9 +325,9 @@ Stores user search history:
 - selected_mode
 - created_at
 
-## Current Fare Calculation
+## Current Ride Fare Calculation
 
-The current version does not use live Rapido, Uber, Ola, or Namma Yatri APIs.
+The current version does not use live Rapido, Uber, Ola, Namma Yatri, or inDrive APIs.
 
 Instead, it uses estimated pricing based on:
 
@@ -263,39 +336,63 @@ Instead, it uses estimated pricing based on:
 - Estimated distance
 - Traffic multiplier
 - Platform fee
+- Hyderabad route overrides for specific known routes
 
 The frontend shows a fare range, for example:
 
 ```text
-Rs 200 - Rs 243
+Rs 78 - Rs 92
 ```
 
-This is more realistic than showing one exact price.
+## Current Product Price Calculation
 
-## Current Limitation
+The current version does not use live Amazon, Flipkart, or Meesho APIs.
+
+Instead, it uses estimated pricing based on:
+
+- Product category
+- Marketplace price factors
+- Estimated rating
+- Estimated review count
+- Quality score
+
+For example, searching `shoes` can return lower realistic estimate ranges such as:
+
+```text
+Meesho: Rs 507
+Flipkart: Rs 624
+Amazon: Rs 819
+```
+
+## Current Limitations
 
 The app does not show exact live provider prices yet.
 
 Reason:
 
-Ride-hailing companies usually do not provide open public APIs for live price comparison. To show exact prices legally and reliably, the project needs:
+Ride-hailing companies and marketplaces usually do not provide open public APIs for direct price comparison. To show exact prices legally and reliably, the project needs:
 
 - Official provider APIs
 - Partner integrations
 - Approved affiliate/deep-link access
+- Marketplace APIs
+- AI vision model or image-search API for accurate product photo matching
 
 ## Future Improvements
 
 - Connect real ride provider APIs
+- Connect real marketplace APIs
 - Add Google Maps or Mapbox location autocomplete
 - Add real route distance calculation
-- Store complete ride search history
+- Add AI vision model for product photo recognition
+- Store complete ride and product search history
 - Add coupons and offers
 - Add fastest ride recommendation
+- Add product category filters
 - Add user profile page
 - Add admin dashboard
 - Add mobile app version using React Native
-- Add payment or affiliate tracking if provider partnerships are available
+- Add payment or affiliate tracking if partnerships are available
 
 ## How To Run The Project
 
@@ -346,8 +443,16 @@ server/sql/schema.sql
 
 Then restart the app.
 
+## Deployment Recommendation
+
+Recommended production setup:
+
+- Frontend on Vercel
+- Backend on Render or Railway
+- Database on hosted MySQL
+
+The frontend API URL must point to the deployed backend, and the backend CORS settings must allow the deployed frontend domain.
+
 ## Final Summary
 
-RideCompare is a V1 ride comparison platform. It helps users compare ride options by price, transport type, and pickup time before opening the original ride provider app for booking.
-
-The current version is a strong prototype with authentication, route input, transport filtering, location suggestions, estimated fare ranges, and booking handoff links.
+RideCompare is a V1 comparison platform for rides and online shopping. It helps users compare ride fares, product prices, ratings, and quality estimates before opening the original app or website.

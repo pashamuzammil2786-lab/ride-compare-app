@@ -1,19 +1,49 @@
 # RideCompare
 
-RideCompare is a ride-hailing comparison web app that helps users compare estimated ride prices from platforms like Rapido, Uber, Ola, Namma Yatri, and inDrive before opening the original provider app for booking.
+RideCompare is a two-in-one comparison web app. It helps users compare ride options and e-commerce product options from one place before opening the original provider app or website.
 
-## Features
+## Main Modules
 
-- Home page with Login and Signup
-- User signup and login
+### Ride Compare
+
+Users can compare estimated ride options from:
+
+- Rapido
+- Ola
+- Uber
+- Namma Yatri
+- inDrive
+
+Ride features:
+
+- Login and signup
 - Pickup and destination input
-- Location suggestions while typing
+- Hyderabad-focused location suggestions
+- Current location pickup button
 - Transport type filter: All, Bike, Auto, Car
-- Top ride options sorted by cheapest estimated fare
-- Estimated fare range display
-- Pickup time and trip time display
-- Booking handoff button to open the original provider website/app
-- MySQL-ready backend with demo fallback mode
+- Estimated fare range
+- Pickup time and trip time
+- Cheapest ride highlight
+- Open original provider website/app
+
+### E-commerce Compare
+
+Users can compare product options from:
+
+- Amazon
+- Flipkart
+- Meesho
+
+E-commerce features:
+
+- Search product by name
+- Upload product photo
+- Photo upload sets detected shopping keywords
+- Editable detected keywords
+- Size selector: Any, Small, Medium, Large, XL, XXL
+- Cheapest product highlight
+- Best quality/rating highlight
+- Open product search on the original marketplace
 
 ## Tech Stack
 
@@ -53,6 +83,7 @@ ride-compare-app
 │   └── src
 │       ├── auth.js
 │       ├── db.js
+│       ├── ecommerce.js
 │       ├── index.js
 │       └── rides.js
 ├── package.json
@@ -60,7 +91,7 @@ ride-compare-app
 └── README.md
 ```
 
-## How To Run
+## How To Run Locally
 
 Open PowerShell:
 
@@ -128,6 +159,8 @@ Then restart the app:
 npm run dev
 ```
 
+If MySQL is not connected, the backend uses demo memory storage for auth during the current server session.
+
 ## API Routes
 
 ```text
@@ -135,26 +168,51 @@ GET  /api/health
 POST /api/auth/register
 POST /api/auth/login
 POST /api/rides/compare
+POST /api/ecommerce/compare
 ```
 
-## Current Limitation
+## Current Limitations
 
-The app currently shows estimated fare ranges, not exact live provider prices.
+Ride prices are estimates. Exact live Rapido, Ola, Uber, Namma Yatri, or inDrive prices require official APIs or approved partner integrations.
 
-Exact prices require official APIs or approved partner integrations from ride providers like Rapido, Uber, Ola, and others.
+E-commerce prices, ratings, and quality scores are estimates. Exact live Amazon, Flipkart, and Meesho prices require official marketplace APIs or approved integrations.
+
+Photo upload currently uses keyword-based detection. True visual matching like Google Lens requires an AI vision model or marketplace image-search API.
+
+## Deployment Notes
+
+Recommended deployment:
+
+- Frontend: Vercel
+- Backend: Render or Railway
+- Database: hosted MySQL
+
+When deploying, update the frontend API URL in:
+
+```text
+client/src/main.jsx
+```
+
+And add the deployed frontend URL to backend CORS in:
+
+```text
+server/src/index.js
+```
 
 ## Future Improvements
 
-- Real provider API integration
+- Real ride provider API integration
+- Real Amazon/Flipkart/Meesho API integration
 - Google Maps or Mapbox autocomplete
 - Real route distance calculation
-- Ride search history page
-- User profile page
+- AI vision model for product photo recognition
+- Product category filters
 - Coupons and offers
-- Fastest ride recommendation
+- Ride and product search history
+- User profile page
 - Admin dashboard
 - React Native mobile app version
 
 ## Summary
 
-RideCompare is a V1 prototype for comparing ride-hailing options in one place. It reduces the time users spend checking multiple apps manually and helps them choose a cheaper or better ride faster.
+RideCompare is a V1 prototype for comparing daily services in one place. It reduces the time users spend checking multiple apps manually and helps them choose cheaper rides and better shopping options faster.

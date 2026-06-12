@@ -2,21 +2,21 @@ const marketplaces = [
   {
     name: "Meesho",
     ratingBoost: 0.1,
-    priceFactor: 0.82,
+    priceFactor: 0.78,
     shipping: "Low delivery fee",
     url: "https://www.meesho.com/search?q="
   },
   {
     name: "Flipkart",
     ratingBoost: 0.18,
-    priceFactor: 0.94,
+    priceFactor: 0.92,
     shipping: "Fast delivery",
     url: "https://www.flipkart.com/search?q="
   },
   {
     name: "Amazon",
     ratingBoost: 0.22,
-    priceFactor: 1.02,
+    priceFactor: 1.18,
     shipping: "Prime options",
     url: "https://www.amazon.in/s?k="
   }
@@ -25,9 +25,10 @@ const marketplaces = [
 function productBasePrice(productName) {
   const product = productName.toLowerCase();
 
-  if (product.includes("dress") || product.includes("kurti") || product.includes("shirt")) return 699;
-  if (product.includes("shoe") || product.includes("sneaker")) return 1299;
-  if (product.includes("watch")) return 999;
+  if (product.includes("dress") || product.includes("kurti")) return 549;
+  if (product.includes("shirt") || product.includes("t shirt") || product.includes("tshirt") || product.includes("polo")) return 399;
+  if (product.includes("shoe") || product.includes("sneaker") || product.includes("footwear")) return 650;
+  if (product.includes("watch")) return 699;
   if (product.includes("phone") || product.includes("mobile")) return 12999;
   if (product.includes("bag")) return 799;
 
@@ -72,7 +73,7 @@ export function compareProducts(req, res) {
   const basePrice = productBasePrice(query);
   const options = marketplaces
     .map((marketplace, index) => {
-      const price = Math.round(basePrice * marketplace.priceFactor + index * 18);
+      const price = Math.round(basePrice * marketplace.priceFactor + index * 26);
       const rating = Math.min(4.9, Number((4.1 + marketplace.ratingBoost + (query.length % 5) * 0.08).toFixed(1)));
       const reviews = 1200 + query.length * 137 + index * 620;
       const qualityScore = Math.round(rating * 18 + (reviews > 3000 ? 8 : 4) - (price / basePrice) * 5);
