@@ -11,13 +11,7 @@ dotenv.config();
 const app = express();
 const port = Number(process.env.PORT || 5000);
 
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://ride-compare-app-eight.vercel.app"
-  ]
-}));
+app.use(cors());
 app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
