@@ -4,37 +4,114 @@ const providers = [
   {
     name: "Rapido",
     modes: [
-      { type: "Bike", base: 28, perKm: 6.4, pickup: 3, comfort: "Fast city commute", appUrl: "https://www.rapido.bike/" },
-      { type: "Auto", base: 42, perKm: 11.2, pickup: 5, comfort: "Budget auto ride", appUrl: "https://www.rapido.bike/" }
+      {
+        type: "Bike",
+        base: 28,
+        perKm: 6.4,
+        pickup: 3,
+        comfort: "Fast city commute",
+        appUrl: "https://www.rapido.bike/"
+      },
+      {
+        type: "Auto",
+        base: 42,
+        perKm: 11.2,
+        pickup: 5,
+        comfort: "Budget auto ride",
+        appUrl: "https://www.rapido.bike/"
+      }
     ]
   },
   {
     name: "Uber",
     modes: [
-      { type: "Auto", base: 58, perKm: 14.5, pickup: 4, comfort: "Reliable auto", appUrl: "https://m.uber.com/ul/" },
-      { type: "Go", base: 82, perKm: 19.5, pickup: 6, comfort: "Compact car", appUrl: "https://m.uber.com/ul/" },
-      { type: "Premier", base: 115, perKm: 27, pickup: 8, comfort: "Premium car", appUrl: "https://m.uber.com/ul/" }
+      {
+        type: "Auto",
+        base: 58,
+        perKm: 14.5,
+        pickup: 4,
+        comfort: "Reliable auto",
+        appUrl: "https://m.uber.com/ul/"
+      },
+      {
+        type: "Go",
+        base: 82,
+        perKm: 19.5,
+        pickup: 6,
+        comfort: "Compact car",
+        appUrl: "https://m.uber.com/ul/"
+      },
+      {
+        type: "Premier",
+        base: 115,
+        perKm: 27,
+        pickup: 8,
+        comfort: "Premium car",
+        appUrl: "https://m.uber.com/ul/"
+      }
     ]
   },
   {
     name: "Ola",
     modes: [
-      { type: "Bike", base: 30, perKm: 6.8, pickup: 4, comfort: "Low-cost bike", appUrl: "https://book.olacabs.com/" },
-      { type: "Mini", base: 78, perKm: 18, pickup: 6, comfort: "Everyday cab", appUrl: "https://book.olacabs.com/" },
-      { type: "Prime", base: 105, perKm: 25, pickup: 7, comfort: "Comfort cab", appUrl: "https://book.olacabs.com/" }
+      {
+        type: "Bike",
+        base: 30,
+        perKm: 6.8,
+        pickup: 4,
+        comfort: "Low-cost bike",
+        appUrl: "https://book.olacabs.com/"
+      },
+      {
+        type: "Mini",
+        base: 78,
+        perKm: 18,
+        pickup: 6,
+        comfort: "Everyday cab",
+        appUrl: "https://book.olacabs.com/"
+      },
+      {
+        type: "Prime",
+        base: 105,
+        perKm: 25,
+        pickup: 7,
+        comfort: "Comfort cab",
+        appUrl: "https://book.olacabs.com/"
+      }
     ]
   },
   {
     name: "Namma Yatri",
     modes: [
-      { type: "Auto", base: 45, perKm: 12, pickup: 5, comfort: "Driver-direct auto", appUrl: "https://www.nammayatri.in/" },
-      { type: "Cab", base: 72, perKm: 17, pickup: 7, comfort: "Open mobility cab", appUrl: "https://www.nammayatri.in/" }
+      {
+        type: "Auto",
+        base: 45,
+        perKm: 12,
+        pickup: 5,
+        comfort: "Driver-direct auto",
+        appUrl: "https://www.nammayatri.in/"
+      },
+      {
+        type: "Cab",
+        base: 72,
+        perKm: 17,
+        pickup: 7,
+        comfort: "Open mobility cab",
+        appUrl: "https://www.nammayatri.in/"
+      }
     ]
   },
   {
     name: "inDrive",
     modes: [
-      { type: "City Ride", base: 68, perKm: 16, pickup: 8, comfort: "Negotiate fare", appUrl: "https://indrive.com/" }
+      {
+        type: "City Ride",
+        base: 68,
+        perKm: 16,
+        pickup: 8,
+        comfort: "Negotiate fare",
+        appUrl: "https://indrive.com/"
+      }
     ]
   }
 ];
@@ -47,10 +124,26 @@ const modeGroups = {
 };
 
 const hyderabadAreas = [
-  { keys: ["paramount hills", "hafiz baba nagar", "hafeez baba nagar", "gate no 1", "landmark super market"], lat: 17.3934, lon: 78.4099 },
-  { keys: ["toli chowki", "tolichowki", "nanal nagar"], lat: 17.3982, lon: 78.4138 },
-  { keys: ["mondee tech", "vittal rao nagar", "gafoornagar", "madhapur"], lat: 17.4436, lon: 78.3889 },
-  { keys: ["hitech city", "hitec city", "cyber towers"], lat: 17.4504, lon: 78.3808 },
+  {
+    keys: ["paramount hills", "hafiz baba nagar", "hafeez baba nagar", "gate no 1", "landmark super market"],
+    lat: 17.3934,
+    lon: 78.4099
+  },
+  {
+    keys: ["toli chowki", "tolichowki", "nanal nagar"],
+    lat: 17.3982,
+    lon: 78.4138
+  },
+  {
+    keys: ["mondee tech", "vittal rao nagar", "gafoornagar", "madhapur"],
+    lat: 17.4436,
+    lon: 78.3889
+  },
+  {
+    keys: ["hitech city", "hitec city", "cyber towers"],
+    lat: 17.4504,
+    lon: 78.3808
+  },
   { keys: ["gachibowli"], lat: 17.4401, lon: 78.3489 },
   { keys: ["mehdipatnam", "medhipatnam"], lat: 17.3948, lon: 78.4399 },
   { keys: ["banjara hills"], lat: 17.4126, lon: 78.4482 },
@@ -152,7 +245,8 @@ export function estimateRides(pickup, destination, transportType = "all") {
         .map((mode) => {
           const platformFee = mode.type.toLowerCase().includes("bike") ? 5 : 12;
           const override = findRouteOverride(pickup, destination, provider.name, mode.type);
-          const estimatedFare = override?.price ?? Math.round((mode.base + mode.perKm * distanceKm + platformFee) * trafficMultiplier);
+          const estimatedFare =
+            override?.price ?? Math.round((mode.base + mode.perKm * distanceKm + platformFee) * trafficMultiplier);
           const minPrice = override?.minPrice ?? Math.max(25, Math.round(estimatedFare * 0.94));
           const maxPrice = override?.maxPrice ?? Math.round(estimatedFare * 1.08);
           return {
@@ -194,10 +288,11 @@ export async function compareRides(req, res) {
   const result = estimateRides(pickup, destination, transportType);
 
   try {
-    await query(
-      "INSERT INTO ride_searches (user_id, pickup, destination) VALUES (?, ?, ?)",
-      [req.user?.id || null, pickup, destination]
-    );
+    await query("INSERT INTO ride_searches (user_id, pickup, destination) VALUES (?, ?, ?)", [
+      req.user?.id || null,
+      pickup,
+      destination
+    ]);
   } catch {
     // The app still works in demo mode when MySQL is not configured.
   }

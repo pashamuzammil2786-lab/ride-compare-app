@@ -25,13 +25,8 @@ repos:
         entry: npm run biome
         language: system
         pass_filenames: false
-      - id: typescript
-        name: typescript
-        entry: npm run typescript
-        language: system
-        pass_filenames: false
-      - id: tsc
-        name: tsc --noEmit
-        entry: npm run tsc
+      - id: type-check
+        name: Type Check
+        entry: npm run typecheck
         language: system
         pass_filenames: false
