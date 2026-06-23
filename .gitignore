@@ -3,6 +3,7 @@ node_modules/
 dist/
 client/dist/
 coverage/
+GitLab-Runner/
 .env
 .env.local
 *.log
