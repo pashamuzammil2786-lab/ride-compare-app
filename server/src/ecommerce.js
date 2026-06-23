@@ -26,7 +26,13 @@ function productBasePrice(productName) {
   const product = productName.toLowerCase();
 
   if (product.includes("dress") || product.includes("kurti")) return 549;
-  if (product.includes("shirt") || product.includes("t shirt") || product.includes("tshirt") || product.includes("polo")) return 399;
+  if (
+    product.includes("shirt") ||
+    product.includes("t shirt") ||
+    product.includes("tshirt") ||
+    product.includes("polo")
+  )
+    return 399;
   if (product.includes("shoe") || product.includes("sneaker") || product.includes("footwear")) return 650;
   if (product.includes("watch")) return 699;
   if (product.includes("phone") || product.includes("mobile")) return 12999;

@@ -21,4 +21,3 @@ As a user, I want to compare estimated ride fares and shopping results from one 
 - [x] Entering locations displays top ride estimates side-by-side.
 - [x] Filtering by transport type updates the list correctly.
 - [x] Searching for products shows price, quality, and direct booking links.
-

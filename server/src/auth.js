@@ -5,11 +5,9 @@ import { query } from "./db.js";
 const demoUsers = new Map();
 
 function signToken(user) {
-  return jwt.sign(
-    { id: user.id, email: user.email, name: user.name },
-    process.env.JWT_SECRET || "dev-secret",
-    { expiresIn: "7d" }
-  );
+  return jwt.sign({ id: user.id, email: user.email, name: user.name }, process.env.JWT_SECRET || "dev-secret", {
+    expiresIn: "7d"
+  });
 }
 
 export async function register(req, res) {
@@ -22,10 +20,11 @@ export async function register(req, res) {
   const passwordHash = await bcrypt.hash(password, 10);
 
   try {
-    const result = await query(
-      "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
-      [name, email.toLowerCase(), passwordHash]
-    );
+    const result = await query("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)", [
+      name,
+      email.toLowerCase(),
+      passwordHash
+    ]);
     const user = { id: result.insertId, name, email: email.toLowerCase() };
     return res.status(201).json({ user, token: signToken(user), mode: "mysql" });
   } catch (error) {
@@ -61,7 +60,11 @@ export async function login(req, res) {
     }
 
     const safeUser = { id: user.id, name: user.name, email: user.email };
-    return res.json({ user: safeUser, token: signToken(safeUser), mode: "mysql" });
+    return res.json({
+      user: safeUser,
+      token: signToken(safeUser),
+      mode: "mysql"
+    });
   } catch {
     const user = demoUsers.get(email.toLowerCase());
 

@@ -43,7 +43,10 @@ async function callByok({ apiKey, model, prompt }) {
     body: JSON.stringify({
       model: model || "gpt-4o-mini",
       messages: [
-        { role: "system", content: "You are a concise comparison assistant for rides and shopping." },
+        {
+          role: "system",
+          content: "You are a concise comparison assistant for rides and shopping."
+        },
         { role: "user", content: prompt }
       ]
     })
@@ -79,5 +82,8 @@ export async function recommendWithAi(req, res) {
     });
   }
 
-  return res.json({ provider: "fallback", suggestion: fallbackSuggestion(context) });
+  return res.json({
+    provider: "fallback",
+    suggestion: fallbackSuggestion(context)
+  });
 }
