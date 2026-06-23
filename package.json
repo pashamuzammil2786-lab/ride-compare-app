@@ -2,6 +2,7 @@
   "name": "ride-compare-app",
   "description": "FareFinder is a ride and shopping comparison app for comparing estimated fares and product deals before opening provider platforms.",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "license": "AGPL-3.0-only",
   "scripts": {
@@ -17,7 +18,7 @@
     "lint": "eslint . && prettier --check . && npm run biome && oxlint .",
     "lint:eslint": "eslint .",
     "prepare": "husky",
-    "secrets": "gitleaks detect --source . --redact",
+    "secrets": "node server/src/scan-secrets.js",
     "server": "npm --prefix server run dev",
     "client": "npm --prefix client run dev",
     "install:all": "npm install && npm --prefix server install && npm --prefix client install",
