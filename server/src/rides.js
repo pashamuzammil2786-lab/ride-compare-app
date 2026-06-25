@@ -288,13 +288,13 @@ export async function compareRides(req, res) {
   const result = estimateRides(pickup, destination, transportType);
 
   try {
-    await query("INSERT INTO ride_searches (user_id, pickup, destination) VALUES (?, ?, ?)", [
+    await query("INSERT INTO search_history (user_id, category, query_details) VALUES ($1, $2, $3)", [
       req.user?.id || null,
-      pickup,
-      destination
+      "ride",
+      JSON.stringify({ pickup, destination, transportType })
     ]);
-  } catch {
-    // The app still works in demo mode when MySQL is not configured.
+  } catch (error) {
+    console.error("Failed to log ride search to history:", error);
   }
 
   return res.json(result);

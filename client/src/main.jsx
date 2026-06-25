@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  BarChart3,
   Bike,
   Car,
   CheckCircle2,
@@ -7,6 +8,7 @@ import {
   ChevronUp,
   Clock3,
   Crosshair,
+  History,
   IndianRupee,
   Loader2,
   LocateFixed,
@@ -15,6 +17,7 @@ import {
   Navigation,
   PackageSearch,
   Search,
+  Server,
   Settings,
   ShieldCheck,
   ShoppingBag,
@@ -22,13 +25,14 @@ import {
   Star,
   TrendingUp,
   Upload,
+  Users,
   Zap
 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
-const API_URL = "https://ride-compare-app.onrender.com/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 const translations = {
   en: {
@@ -396,7 +400,7 @@ function Logo() {
   );
 }
 
-function AiInsightsPanel({ results, type, aiConfig, token, t }) {
+function AiInsightsPanel({ results, type, aiConfig, token, t, onAuthError }) {
   const [insight, setInsight] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -441,6 +445,11 @@ function AiInsightsPanel({ results, type, aiConfig, token, t }) {
           }
         })
       });
+
+      if (response.status === 401) {
+        if (onAuthError) onAuthError();
+        return;
+      }
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Failed to fetch recommendation");
@@ -700,6 +709,350 @@ async function reverseGeocode(latitude, longitude) {
   return cleanDisplayName(data.display_name || `${latitude}, ${longitude}`);
 }
 
+function AdminDashboard({ token, logout }) {
+  const [activeTab, setActiveTab] = useState("overview");
+  const [stats, setStats] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [searches, setSearches] = useState([]);
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const fetchStats = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(`${API_URL}/admin/stats`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.status === 401) {
+        logout();
+        return;
+      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to fetch stats");
+      setStats(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(`${API_URL}/admin/users`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.status === 401) {
+        logout();
+        return;
+      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to fetch users");
+      setUsers(data.users);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSearches = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(`${API_URL}/admin/searches`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.status === 401) {
+        logout();
+        return;
+      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to fetch searches");
+      setSearches(data.searches);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchAnalytics = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(`${API_URL}/admin/analytics`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.status === 401) {
+        logout();
+        return;
+      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to fetch analytics");
+      setAnalytics(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleUserRole = async (userId, currentRole) => {
+    const nextRole = currentRole === "admin" ? "user" : "admin";
+    try {
+      const res = await fetch(`${API_URL}/admin/users/${userId}/role`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ role: nextRole })
+      });
+      if (res.status === 401) {
+        logout();
+        return;
+      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to update role");
+      fetchUsers();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "overview") fetchStats();
+    else if (activeTab === "users") fetchUsers();
+    else if (activeTab === "searches") fetchSearches();
+    else if (activeTab === "analytics") fetchAnalytics();
+  }, [activeTab]);
+
+  return (
+    <div className="admin-dashboard-container animate-fade-in">
+      <header className="admin-header">
+        <div className="admin-title-row">
+          <ShieldCheck size={26} className="admin-icon" />
+          <div>
+            <h1>Admin Control Panel</h1>
+            <p>Monitor system health, manage permissions, and audit user searches</p>
+          </div>
+        </div>
+        <div className="admin-tabs">
+          <button className={activeTab === "overview" ? "tab active" : "tab"} onClick={() => setActiveTab("overview")}>
+            Overview
+          </button>
+          <button className={activeTab === "users" ? "tab active" : "tab"} onClick={() => setActiveTab("users")}>
+            User Management
+          </button>
+          <button
+            className={activeTab === "analytics" ? "tab active" : "tab"}
+            onClick={() => setActiveTab("analytics")}
+          >
+            Analytics & Trends
+          </button>
+          <button className={activeTab === "searches" ? "tab active" : "tab"} onClick={() => setActiveTab("searches")}>
+            Search Monitor
+          </button>
+        </div>
+      </header>
+
+      {error && <div className="admin-error">{error}</div>}
+
+      {loading && (
+        <div className="admin-loading">
+          <Loader2 className="spin" size={32} />
+          <p>Retrieving control panel data...</p>
+        </div>
+      )}
+
+      {!loading && activeTab === "overview" && stats && (
+        <div className="admin-overview-grid animate-fade-in">
+          <div className="stat-card">
+            <h3>Total Registered Users</h3>
+            <strong>{stats.totalUsers}</strong>
+            <p className="subtext">Accounts created since system launch</p>
+          </div>
+          <div className="stat-card">
+            <h3>Active Users Today</h3>
+            <strong>{stats.activeUsers}</strong>
+            <p className="subtext">Distinguished users active in last 24h</p>
+          </div>
+          <div className="stat-card">
+            <h3>New Users Today</h3>
+            <strong>{stats.newUsersToday}</strong>
+            <p className="subtext">Registrations in last 24h</p>
+          </div>
+          <div className="stat-card">
+            <h3>Total Comparison Searches</h3>
+            <strong>{stats.totalSearches}</strong>
+            <div className="searches-split">
+              <span>Rides: {stats.rideSearches}</span>
+              <span>Products: {stats.productSearches}</span>
+            </div>
+          </div>
+          <div className="stat-card health">
+            <h3>System Status</h3>
+            <div className="health-status">
+              <span className="health-dot" />
+              <strong>{stats.systemHealth === "healthy" ? "Healthy & Online" : "Degraded"}</strong>
+            </div>
+            <p className="subtext">Supabase DB, AI APIs, & local services operational</p>
+          </div>
+        </div>
+      )}
+
+      {!loading && activeTab === "users" && (
+        <div className="admin-table-wrapper animate-fade-in">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>User Name</th>
+                <th>Email Address</th>
+                <th>Registration Date</th>
+                <th>Last Login</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((u) => (
+                <tr key={u.id}>
+                  <td>{u.name}</td>
+                  <td>{u.email}</td>
+                  <td>{new Date(u.created_at).toLocaleDateString()}</td>
+                  <td>{u.last_login ? new Date(u.last_login).toLocaleString() : "Never"}</td>
+                  <td>
+                    <span className={`role-badge ${u.role}`}>{u.role}</span>
+                  </td>
+                  <td>
+                    <button
+                      className="ghost-button compact role-btn"
+                      onClick={() => toggleUserRole(u.id, u.role)}
+                      disabled={u.id === 1}
+                    >
+                      Toggle Role
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {!loading && activeTab === "analytics" && analytics && (
+        <div className="admin-analytics-container animate-fade-in">
+          <div className="analytics-section">
+            <h2>Search Distribution Over Time</h2>
+            <div className="bar-chart-css">
+              {analytics.usageTrends.map((t, idx) => {
+                const maxVal = Math.max(...analytics.usageTrends.map((trend) => trend.count), 1);
+                const pct = (t.count / maxVal) * 100;
+                return (
+                  <div className="chart-bar-wrapper" key={idx}>
+                    <span className="bar-val">{t.count}</span>
+                    <div className="chart-bar" style={{ height: `${pct}%` }} />
+                    <span className="bar-label">{t.day}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="analytics-two-columns">
+            <div className="analytics-card">
+              <h2>Top Ride Routes</h2>
+              <div className="trend-list">
+                {analytics.popularRides.length === 0 && (
+                  <p className="empty-text">No route search history logged yet.</p>
+                )}
+                {analytics.popularRides.map((item, idx) => {
+                  const maxCount = Math.max(...analytics.popularRides.map((i) => i.count), 1);
+                  const widthPct = (item.count / maxCount) * 100;
+                  return (
+                    <div className="trend-item" key={idx}>
+                      <div className="trend-info">
+                        <span className="trend-name">{item.query}</span>
+                        <span className="trend-count">{item.count} searches</span>
+                      </div>
+                      <div className="progress-bar-bg">
+                        <div className="progress-bar-fill ride" style={{ width: `${widthPct}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="analytics-card">
+              <h2>Top Product Keywords</h2>
+              <div className="trend-list">
+                {analytics.popularProducts.length === 0 && (
+                  <p className="empty-text">No product search history logged yet.</p>
+                )}
+                {analytics.popularProducts.map((item, idx) => {
+                  const maxCount = Math.max(...analytics.popularProducts.map((i) => i.count), 1);
+                  const widthPct = (item.count / maxCount) * 100;
+                  return (
+                    <div className="trend-item" key={idx}>
+                      <div className="trend-info">
+                        <span className="trend-name">"{item.query}"</span>
+                        <span className="trend-count">{item.count} searches</span>
+                      </div>
+                      <div className="progress-bar-bg">
+                        <div className="progress-bar-fill ecommerce" style={{ width: `${widthPct}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!loading && activeTab === "searches" && (
+        <div className="admin-table-wrapper animate-fade-in">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>User Email</th>
+                <th>Category</th>
+                <th>Search Query Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {searches.map((s) => {
+                const details = s.query_details;
+                const queryStr =
+                  s.category === "ride"
+                    ? `${details.pickup || "Unknown"} ➔ ${details.destination || "Unknown"} (${details.transportType || "all"})`
+                    : `"${details.productName || "Unknown"}" ${details.size !== "any" ? `(Size: ${details.size})` : ""}`;
+                return (
+                  <tr key={s.id}>
+                    <td>{new Date(s.created_at).toLocaleString()}</td>
+                    <td>{s.email || "guest@example.com"}</td>
+                    <td>
+                      <span className={`pill ${s.category}`}>{s.category}</span>
+                    </td>
+                    <td className="query-details-cell">{queryStr}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
   const [screen, setScreen] = useState("home");
   const [activeModule, setActiveModule] = useState("menu");
@@ -851,6 +1204,11 @@ function App() {
     }
   }
 
+  const handleAuthError = () => {
+    logout();
+    setMessage("Session expired or invalid. Please log in again.");
+  };
+
   async function compareRides(event) {
     event.preventDefault();
     setLoading(true);
@@ -865,6 +1223,12 @@ function App() {
         },
         body: JSON.stringify(route)
       });
+
+      if (response.status === 401) {
+        handleAuthError();
+        return;
+      }
+
       const data = await response.json();
 
       if (!response.ok) throw new Error(data.message || "Could not compare rides");
@@ -890,6 +1254,12 @@ function App() {
         },
         body: JSON.stringify(productForm)
       });
+
+      if (response.status === 401) {
+        handleAuthError();
+        return;
+      }
+
       const data = await response.json();
 
       if (!response.ok) throw new Error(data.message || "Could not compare products");
@@ -1487,6 +1857,11 @@ function App() {
               Home
             </button>
           )}
+          {user.role === "admin" && activeModule !== "admin" && (
+            <button className="module-back-button admin-top-btn" onClick={() => setActiveModule("admin")} type="button">
+              Admin Panel
+            </button>
+          )}
           <LanguageToggle lang={lang} setLang={handleSetLang} />
           <button className="icon-button" onClick={() => setShowAiSettings(true)} title="AI Settings">
             <Settings size={18} />
@@ -1556,7 +1931,11 @@ function App() {
             {message && <p className="message">{message}</p>}
           </section>
 
-          {results ? <RideResults results={results} aiConfig={aiConfig} token={token} t={t} /> : <EmptyState />}
+          {results ? (
+            <RideResults results={results} aiConfig={aiConfig} token={token} t={t} onAuthError={handleAuthError} />
+          ) : (
+            <EmptyState />
+          )}
         </>
       )}
 
@@ -1573,8 +1952,11 @@ function App() {
           aiConfig={aiConfig}
           token={token}
           t={t}
+          onAuthError={handleAuthError}
         />
       )}
+
+      {activeModule === "admin" && user.role === "admin" && <AdminDashboard token={token} logout={logout} />}
 
       {/* AI Settings Modal */}
       {showAiSettings && (
@@ -1674,6 +2056,13 @@ function ModuleMenu({ setActiveModule, user }) {
           <span>E-commerce</span>
           <p>Compare Amazon, Flipkart and Meesho by price, rating and size.</p>
         </button>
+        {user.role === "admin" && (
+          <button className="module-card admin" onClick={() => setActiveModule("admin")} type="button">
+            <ShieldCheck size={30} />
+            <span>Admin Dashboard</span>
+            <p>Manage users, view searches, and check system health.</p>
+          </button>
+        )}
       </div>
     </section>
   );
@@ -1690,7 +2079,8 @@ function EcommerceModule({
   setForm,
   aiConfig,
   token,
-  t
+  t,
+  onAuthError
 }) {
   return (
     <>
@@ -1784,12 +2174,14 @@ function EcommerceModule({
         </form>
         {message && <p className="message">{message}</p>}
       </section>
-      {results && <ProductResults results={results} aiConfig={aiConfig} token={token} t={t} />}
+      {results && (
+        <ProductResults results={results} aiConfig={aiConfig} token={token} t={t} onAuthError={onAuthError} />
+      )}
     </>
   );
 }
 
-function ProductResults({ results, aiConfig, token, t }) {
+function ProductResults({ results, aiConfig, token, t, onAuthError }) {
   return (
     <section className="commerce-results">
       <div className="summary">
@@ -1838,7 +2230,14 @@ function ProductResults({ results, aiConfig, token, t }) {
           </article>
         ))}
       </div>
-      <AiInsightsPanel results={results} type="ecommerce" aiConfig={aiConfig} token={token} t={t} />
+      <AiInsightsPanel
+        results={results}
+        type="ecommerce"
+        aiConfig={aiConfig}
+        token={token}
+        t={t}
+        onAuthError={onAuthError}
+      />
     </section>
   );
 }
@@ -1891,7 +2290,7 @@ function LocationInput({
   );
 }
 
-function RideResults({ results, aiConfig, token, t }) {
+function RideResults({ results, aiConfig, token, t, onAuthError }) {
   const fastest = useMemo(() => [...results.options].sort((a, b) => a.pickupMinutes - b.pickupMinutes)[0], [results]);
 
   return (
@@ -1953,7 +2352,14 @@ function RideResults({ results, aiConfig, token, t }) {
           </article>
         ))}
       </div>
-      <AiInsightsPanel results={results} type="ride" aiConfig={aiConfig} token={token} t={t} />
+      <AiInsightsPanel
+        results={results}
+        type="ride"
+        aiConfig={aiConfig}
+        token={token}
+        t={t}
+        onAuthError={onAuthError}
+      />
     </section>
   );
 }

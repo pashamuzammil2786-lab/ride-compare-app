@@ -1,3 +1,5 @@
+import { query } from "./db.js";
+
 const marketplaces = [
   {
     name: "Meesho",
@@ -68,41 +70,51 @@ function buildProductTitle(productName, size, marketplace) {
   return `${cleanName}${sizeLabel} on ${marketplace}`;
 }
 
-export function compareProducts(req, res) {
+export async function compareProducts(req, res) {
   const { productName = "", size = "any", searchMode = "name", imageName = "" } = req.body;
-  const query = normalizePhotoQuery(productName, imageName, searchMode);
+  const queryVal = normalizePhotoQuery(productName, imageName, searchMode);
 
-  if (!query) {
+  if (!queryVal) {
     return res.status(400).json({ message: "Enter a product name or upload a product photo." });
   }
 
-  const basePrice = productBasePrice(query);
+  const basePrice = productBasePrice(queryVal);
   const options = marketplaces
     .map((marketplace, index) => {
       const price = Math.round(basePrice * marketplace.priceFactor + index * 26);
-      const rating = Math.min(4.9, Number((4.1 + marketplace.ratingBoost + (query.length % 5) * 0.08).toFixed(1)));
-      const reviews = 1200 + query.length * 137 + index * 620;
+      const rating = Math.min(4.9, Number((4.1 + marketplace.ratingBoost + (queryVal.length % 5) * 0.08).toFixed(1)));
+      const reviews = 1200 + queryVal.length * 137 + index * 620;
       const qualityScore = Math.round(rating * 18 + (reviews > 3000 ? 8 : 4) - (price / basePrice) * 5);
 
       return {
         id: marketplace.name.toLowerCase(),
         marketplace: marketplace.name,
-        title: buildProductTitle(query, size, marketplace.name),
+        title: buildProductTitle(queryVal, size, marketplace.name),
         price,
         rating,
         reviews,
         qualityScore,
         shipping: marketplace.shipping,
         size,
-        productUrl: `${marketplace.url}${encodeURIComponent(query)}`
+        productUrl: `${marketplace.url}${encodeURIComponent(queryVal)}`
       };
     })
     .sort((a, b) => a.price - b.price);
 
   const bestQuality = [...options].sort((a, b) => b.qualityScore - a.qualityScore)[0];
 
+  try {
+    await query("INSERT INTO search_history (user_id, category, query_details) VALUES ($1, $2, $3)", [
+      req.user?.id || null,
+      "ecommerce",
+      JSON.stringify({ productName: queryVal, size, searchMode, imageName })
+    ]);
+  } catch (error) {
+    console.error("Failed to log product search to history:", error);
+  }
+
   return res.json({
-    query,
+    query: queryVal,
     searchMode,
     size,
     currency: "INR",
