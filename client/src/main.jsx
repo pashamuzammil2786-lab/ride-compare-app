@@ -644,8 +644,47 @@ const hyderabadFallbackPlaces = [
   "Dilsukhnagar, Hyderabad",
   "Nagole, Hyderabad",
   "Habsiguda, Hyderabad",
-  "Kompally, Hyderabad"
+  "Kompally, Hyderabad",
+  "Lingampally, Hyderabad",
+  "Golconda Fort, Hyderabad",
+  "Birla Mandir, Hyderabad",
+  "NTR Gardens, Hyderabad",
+  "Lumbini Park, Hyderabad",
+  "Salar Jung Museum, Hyderabad",
+  "Nehru Zoological Park, Hyderabad",
+  "Inorbit Mall, Hyderabad",
+  "IKEA, Hyderabad",
+  "DLF Cyber City, Hyderabad"
 ];
+
+const productSuggestionsList = [
+  "Nike Shoes",
+  "Nike Air Max",
+  "Nike Revolution 7",
+  "iPhone 16",
+  "iPhone 16 Pro",
+  "Samsung Galaxy S24",
+  "Samsung Galaxy A55",
+  "HP Pavilion Laptop",
+  "Dell Inspiron Laptop",
+  "MacBook Air M3",
+  "Sony WH-1000XM4 Headphones",
+  "boAt Rockerz 450",
+  "JBL Tune Headphones",
+  "Wireless Earbuds",
+  "Smart Watch",
+  "Men Plain Black Shirt",
+  "Men Polo T-Shirt",
+  "Women Silk Saree",
+  "Designer Kurti",
+  "Leather Backpack"
+];
+
+function getProductSuggestions(value) {
+  const search = value.trim().toLowerCase();
+  if (search.length < 2) return [];
+  return productSuggestionsList.filter((item) => item.toLowerCase().includes(search)).slice(0, 6);
+}
 
 function getLocalSuggestions(value) {
   const search = value.trim().toLowerCase();
@@ -1086,6 +1125,32 @@ function App() {
   const [productResults, setProductResults] = useState(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [searchHistory, setSearchHistory] = useState([]);
+
+  const fetchHistory = async () => {
+    if (!localStorage.getItem("rideToken")) return;
+    try {
+      const res = await fetch(`${API_URL}/history`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("rideToken")}` }
+      });
+      if (res.status === 401) {
+        handleAuthError();
+        return;
+      }
+      const data = await res.json();
+      if (res.ok) {
+        setSearchHistory(data.history || []);
+      }
+    } catch (err) {
+      console.error("Error fetching history:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem("rideToken") && (activeModule === "ride" || activeModule === "ecommerce")) {
+      fetchHistory();
+    }
+  }, [activeModule, token]);
 
   // i18n and AI configuration states
   const [lang, setLang] = useState(() => localStorage.getItem("lang") || "en");
@@ -1209,10 +1274,12 @@ function App() {
     setMessage("Session expired or invalid. Please log in again.");
   };
 
-  async function compareRides(event) {
-    event.preventDefault();
+  async function compareRides(event, customRoute = null) {
+    if (event) event.preventDefault();
     setLoading(true);
     setMessage("");
+
+    const targetRoute = customRoute || route;
 
     try {
       const response = await fetch(`${API_URL}/rides/compare`, {
@@ -1221,7 +1288,7 @@ function App() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(route)
+        body: JSON.stringify(targetRoute)
       });
 
       if (response.status === 401) {
@@ -1233,6 +1300,7 @@ function App() {
 
       if (!response.ok) throw new Error(data.message || "Could not compare rides");
       setResults(data);
+      fetchHistory();
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -1240,10 +1308,12 @@ function App() {
     }
   }
 
-  async function compareProducts(event) {
-    event.preventDefault();
+  async function compareProducts(event, customProduct = null) {
+    if (event) event.preventDefault();
     setLoading(true);
     setMessage("");
+
+    const targetProduct = customProduct || productForm;
 
     try {
       const response = await fetch(`${API_URL}/ecommerce/compare`, {
@@ -1252,7 +1322,7 @@ function App() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(productForm)
+        body: JSON.stringify(targetProduct)
       });
 
       if (response.status === 401) {
@@ -1264,6 +1334,7 @@ function App() {
 
       if (!response.ok) throw new Error(data.message || "Could not compare products");
       setProductResults(data);
+      fetchHistory();
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -1929,6 +2000,37 @@ function App() {
               </button>
             </form>
             {message && <p className="message">{message}</p>}
+            {searchHistory.filter((h) => h.category === "ride").length > 0 && (
+              <div className="recent-searches-box">
+                <span className="recent-label">Recent Searches:</span>
+                <div className="recent-chips">
+                  {searchHistory
+                    .filter((h) => h.category === "ride")
+                    .slice(0, 5)
+                    .map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className="history-chip"
+                        onClick={() => {
+                          const newRoute = {
+                            pickup: item.query_details.pickup,
+                            destination: item.query_details.destination,
+                            transportType: item.query_details.transportType || "all"
+                          };
+                          setRoute(newRoute);
+                          compareRides(null, newRoute);
+                        }}
+                      >
+                        <History size={12} />
+                        <span>
+                          {item.query_details.pickup.split(",")[0]} ➔ {item.query_details.destination.split(",")[0]}
+                        </span>
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
           </section>
 
           {results ? (
@@ -1953,6 +2055,7 @@ function App() {
           token={token}
           t={t}
           onAuthError={handleAuthError}
+          searchHistory={searchHistory}
         />
       )}
 
@@ -2080,8 +2183,12 @@ function EcommerceModule({
   aiConfig,
   token,
   t,
-  onAuthError
+  onAuthError,
+  searchHistory = []
 }) {
+  const [productFocused, setProductFocused] = useState(false);
+  const productSuggestions = getProductSuggestions(form.productName);
+
   return (
     <>
       <section className="commerce-band">
@@ -2090,12 +2197,14 @@ function EcommerceModule({
           <h1>Search product by name or photo.</h1>
         </div>
         <form className="commerce-form" onSubmit={compareProducts}>
-          <label>
+          <label style={{ position: "relative" }}>
             Product name or detected keywords
             <div className="input-icon-wrap">
               <Search size={18} />
               <input
                 value={form.productName}
+                onFocus={() => setProductFocused(true)}
+                onBlur={() => window.setTimeout(() => setProductFocused(false), 150)}
                 onChange={(event) =>
                   setForm({
                     ...form,
@@ -2106,6 +2215,27 @@ function EcommerceModule({
                 placeholder="Dress, shoes, watch, phone..."
               />
             </div>
+            {productFocused && productSuggestions.length > 0 && (
+              <div className="suggestion-list" style={{ top: "calc(100% + 4px)", zIndex: 10 }}>
+                {productSuggestions.map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    onMouseDown={() => {
+                      setForm({
+                        ...form,
+                        searchMode: "name",
+                        productName: suggestion
+                      });
+                    }}
+                    type="button"
+                    style={{ width: "100%", textAlign: "left" }}
+                  >
+                    <Search size={14} style={{ marginRight: 8, color: "#219c67" }} />
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
           </label>
           <label>
             Size
@@ -2173,6 +2303,36 @@ function EcommerceModule({
           </button>
         </form>
         {message && <p className="message">{message}</p>}
+        {searchHistory.filter((h) => h.category === "ecommerce").length > 0 && (
+          <div className="recent-searches-box">
+            <span className="recent-label">Recent Searches:</span>
+            <div className="recent-chips">
+              {searchHistory
+                .filter((h) => h.category === "ecommerce")
+                .slice(0, 5)
+                .map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className="history-chip"
+                    onClick={() => {
+                      const newProduct = {
+                        productName: item.query_details.productName,
+                        size: item.query_details.size || "any",
+                        searchMode: item.query_details.searchMode || "name",
+                        imageName: item.query_details.imageName || ""
+                      };
+                      setForm(newProduct);
+                      compareProducts(null, newProduct);
+                    }}
+                  >
+                    <History size={12} />
+                    <span>{item.query_details.productName}</span>
+                  </button>
+                ))}
+            </div>
+          </div>
+        )}
       </section>
       {results && (
         <ProductResults results={results} aiConfig={aiConfig} token={token} t={t} onAuthError={onAuthError} />
@@ -2201,18 +2361,27 @@ function ProductResults({ results, aiConfig, token, t, onAuthError }) {
       <div className="product-grid">
         {results.options.map((product) => (
           <article
-            className={product.id === results.cheapest.id ? "product-card best" : "product-card"}
+            className={product.isCheapest ? "product-card best" : "product-card"}
             key={product.id}
           >
             <div className="product-card-top">
-              <div className="mode-icon">
-                <ShoppingBag size={21} />
+              <div className="mode-icon" style={{ overflow: "hidden", padding: 0 }}>
+                {product.image ? (
+                  <img src={product.image} alt={product.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <ShoppingBag size={21} />
+                )}
               </div>
-              <div>
+              <div style={{ paddingRight: 85 }}>
                 <h3>{product.marketplace}</h3>
                 <p>{product.title}</p>
               </div>
-              {product.id === results.cheapest.id && <span className="badge">Cheapest</span>}
+              <div className="badge-container">
+                {product.isCheapest && <span className="badge cheapest-badge">Lowest Price</span>}
+                {product.isHighestRating && <span className="badge rating-badge">Top Rated</span>}
+                {product.isFastestDelivery && <span className="badge shipping-badge">Fast Delivery</span>}
+                {product.isBestValue && <span className="badge value-badge">Best Value</span>}
+              </div>
             </div>
             <div className="price-row">
               <strong>Rs {product.price}</strong>
@@ -2323,19 +2492,24 @@ function RideResults({ results, aiConfig, token, t, onAuthError }) {
             <p>Try selecting All or another transport mode for this route.</p>
           </article>
         )}
-        {results.options.map((ride, index) => (
-          <article className={index === 0 ? "ride-card best" : "ride-card"} key={ride.id}>
+        {results.options.map((ride) => (
+          <article className={ride.isCheapest ? "ride-card best" : "ride-card"} key={ride.id}>
             <div className="ride-card-top">
               <div className="mode-icon">
                 {ride.mode.toLowerCase().includes("bike") ? <Bike size={22} /> : <Car size={22} />}
               </div>
-              <div>
+              <div style={{ paddingRight: 85 }}>
                 <h3>{ride.provider}</h3>
                 <p>
                   {ride.mode} · {ride.comfort}
                 </p>
               </div>
-              {index === 0 && <span className="badge">Cheapest</span>}
+              <div className="badge-container">
+                {ride.isCheapest && <span className="badge cheapest-badge">Cheapest</span>}
+                {ride.isFastest && <span className="badge shipping-badge">Fastest</span>}
+                {ride.isBestRated && <span className="badge rating-badge">Best Rated</span>}
+                {ride.isBestValue && <span className="badge value-badge">Best Value</span>}
+              </div>
             </div>
             <div className="price-row">
               <strong>

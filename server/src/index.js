@@ -5,9 +5,10 @@ import { getAnalytics, getSearches, getStats, getUsers, updateUserRole } from ".
 import { recommendWithAi } from "./ai.js";
 import { login, register, requireAdmin, requireAuth } from "./auth.js";
 import { compareProducts } from "./ecommerce.js";
-import { compareRides } from "./rides.js";
+import { compareRides, getMyHistory } from "./rides.js";
 
 dotenv.config();
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
 const app = express();
 const port = Number(process.env.PORT || 5000);
@@ -27,6 +28,7 @@ app.post("/api/auth/login", login);
 // User Features (Protected)
 app.post("/api/rides/compare", requireAuth, compareRides);
 app.post("/api/ecommerce/compare", requireAuth, compareProducts);
+app.get("/api/history", requireAuth, getMyHistory);
 app.post("/api/ai/recommend", requireAuth, recommendWithAi);
 
 // Admin Dashboard Features (Protected & Restricted to Admin Role)

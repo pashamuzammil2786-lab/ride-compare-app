@@ -232,6 +232,15 @@ export async function query(sql, params = []) {
     return [];
   }
 
+  // 14. User-specific searches
+  if (sqlLower.includes("select * from search_history where user_id =")) {
+    const userId = Number(params[0]);
+    return [...mockDb.search_history]
+      .filter((s) => s.user_id === userId)
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 15);
+  }
+
   // 14. Recent searches
   if (sqlLower.includes("select s.*, u.email from search_history")) {
     return [...mockDb.search_history]
