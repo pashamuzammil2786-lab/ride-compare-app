@@ -94,6 +94,7 @@ const translations = {
     password: "Password",
     continue: "Continue",
     backHome: "Back to home",
+    home: "Home",
     hiText: "Hi",
     whatCompare: "What do you want to compare today?",
     compareAggregators: "Compare Rapido, Ola, Uber and more for your route.",
@@ -145,7 +146,21 @@ const translations = {
       "No! You can browse and compare everything inside SmartCompare. Once you choose the best ride or product, we provide a direct link to open the respective app and complete your booking or purchase.",
     faqQ3: "Is photo-based shopping search accurate?",
     faqA3:
-      "Yes, our e-commerce module converts uploaded product photos into descriptive keywords and compares exact matches across Meesho, Flipkart, and Amazon."
+      "Yes, our e-commerce module converts uploaded product photos into descriptive keywords and compares exact matches across Meesho, Flipkart, and Amazon.",
+    recentSearches: "Recent Searches",
+    lowestPrice: "Lowest Price",
+    topRated: "Top Rated",
+    fastDelivery: "Fast Delivery",
+    bestValue: "Best Value",
+    cheapestBadge: "Cheapest",
+    fastestBadge: "Fastest",
+    bestRatedBadge: "Best Rated",
+    bestValueBadge: "Best Value",
+    productResults: "Product results",
+    minPickup: "min pickup",
+    minTrip: "min trip",
+    adminDashboard: "Admin Dashboard",
+    adminDashboardDesc: "Manage users, view searches, and check system health."
   },
   hi: {
     features: "विशेषताएं",
@@ -205,6 +220,7 @@ const translations = {
     password: "पासवर्ड",
     continue: "आगे बढ़ें",
     backHome: "होम पर वापस जाएं",
+    home: "होम",
     hiText: "नमस्ते",
     whatCompare: "आज आप किस चीज़ की तुलना करना चाहते हैं?",
     compareAggregators: "अपने मार्ग के लिए रैपिडो, ओला, उबर और अधिक की तुलना करें।",
@@ -256,7 +272,21 @@ const translations = {
       "नहीं! आप स्मार्टकम्पेयर के अंदर सब कुछ ब्राउज़ और तुलना कर सकते हैं। एक बार जब आप सबसे अच्छा विकल्प चुन लेते हैं, तो हम बुकिंग पूरी करने के लिए एक सीधा लिंक प्रदान करते हैं।",
     faqQ3: "क्या फोटो-आधारित उत्पाद खोज सटीक है?",
     faqA3:
-      "हाँ, हमारा ई-कॉमर्स मॉड्यूल अपलोड की गई उत्पाद तस्वीरों को कीवर्ड में परिवर्तित करता है और मीशो, फ्लिपकार्ट और अमेज़न पर सटीक मिलान की तुलना करता है।"
+      "हाँ, हमारा ई-कॉमर्स मॉड्यूल अपलोड की गई उत्पाद तस्वीरों को कीवर्ड में परिवर्तित करता है और मीशो, फ्लिपकार्ट और अमेज़न पर सटीक मिलान की तुलना करता है।",
+    recentSearches: "हालिया खोजें",
+    lowestPrice: "सबसे कम कीमत",
+    topRated: "टॉप रेटेड",
+    fastDelivery: "तेज़ डिलीवरी",
+    bestValue: "सर्वोत्तम मूल्य",
+    cheapestBadge: "सबसे सस्ता",
+    fastestBadge: "सबसे तेज़",
+    bestRatedBadge: "सर्वोत्तम रेटिंग",
+    bestValueBadge: "सर्वोत्तम मूल्य",
+    productResults: "उत्पाद परिणाम",
+    minPickup: "न्यूनतम पिकअप",
+    minTrip: "न्यूनतम यात्रा",
+    adminDashboard: "एडमिन डैशबोर्ड",
+    adminDashboardDesc: "उपयोगकर्ताओं को प्रबंधित करें, खोजें देखें और सिस्टम स्वास्थ्य की जांच करें।"
   },
   te: {
     features: "ఫీచర్లు",
@@ -317,6 +347,7 @@ const translations = {
     password: "పాస్‌వర్డ్",
     continue: "కొనసాగించండి",
     backHome: "హోమ్‌కు తిరిగి వెళ్లండి",
+    home: "హోమ్",
     hiText: "హాయ్",
     whatCompare: "ఈరోజు మీరు దేనిని పోల్చాలనుకుంటున్నారు?",
     compareAggregators: "మీ ప్రయాణ మార్గం కోసం రాపిడో, ఓలా, ఉబెర్ మరియు మరిన్నింటిని పోల్చండి.",
@@ -368,7 +399,21 @@ const translations = {
       "లేదు! మీరు స్మార్ట్ పోలిక లోపల ప్రతిదీ బ్రౌజ్ చేయవచ్చు మరియు పోల్చవచ్చు. నేరుగా బుక్ చేయడానికి లింక్ అందించబడుతుంది.",
     faqQ3: "ఫోటో ఆధారిత షాపింగ్ శోధన ఖచ్చితమైనదేనా?",
     faqA3:
-      "అవును, మా ఈ-కామర్స్ మాడ్యూల్ అప్‌లోడ్ చేసిన ఉత్పత్తి ఫోటోను కీవర్డ్స్‌గా మారుస్తుంది మరియు మీషో, ఫ్లిప్‌కార్ట్ మరియు అమెజాన్‌లలో పోలుస్తుంది."
+      "అవును, మా ఈ-కామర్స్ మాడ్యూల్ అప్‌లోడ్ చేసిన ఉత్పత్తి ఫోటోను కీవర్డ్స్‌గా మారుస్తుంది మరియు మీషో, ఫ్లిప్‌కార్ట్ మరియు అమెజాన్‌లలో పోలుస్తుంది।",
+    recentSearches: "ఇటీవలి శోధనలు",
+    lowestPrice: "అతి తక్కువ ధర",
+    topRated: "టాప్ రేటెడ్",
+    fastDelivery: "వేగవంతమైన డెలివరీ",
+    bestValue: "ఉత్తమ విలువ",
+    cheapestBadge: "అతి చౌకైనది",
+    fastestBadge: "అత్యంత వేగవంతమైన",
+    bestRatedBadge: "ఉత్తమ రేటింగ్",
+    bestValueBadge: "ఉత్తమ విలువ",
+    productResults: "ఉత్పత్తి ఫలితాలు",
+    minPickup: "నిమిషాల పికప్",
+    minTrip: "నిమిషాల ప్రయాణం",
+    adminDashboard: "అడ్మిన్ డ్యాష్‌బోర్డ్",
+    adminDashboardDesc: "వినియోగదారులను నిర్వహించండి, శోధనలను వీక్షించండి మరియు సిస్టమ్ ఆరోగ్యాన్ని తనిఖీ చేయండి."
   }
 };
 
@@ -1925,12 +1970,12 @@ function App() {
         <div className="topbar-actions">
           {activeModule !== "menu" && (
             <button className="module-back-button" onClick={() => setActiveModule("menu")} type="button">
-              Home
+              {t("home")}
             </button>
           )}
           {user.role === "admin" && activeModule !== "admin" && (
             <button className="module-back-button admin-top-btn" onClick={() => setActiveModule("admin")} type="button">
-              Admin Panel
+              {t("adminDashboard")}
             </button>
           )}
           <LanguageToggle lang={lang} setLang={handleSetLang} />
@@ -1943,7 +1988,7 @@ function App() {
         </div>
       </nav>
 
-      {activeModule === "menu" && <ModuleMenu user={user} setActiveModule={setActiveModule} />}
+      {activeModule === "menu" && <ModuleMenu user={user} setActiveModule={setActiveModule} t={t} />}
 
       {activeModule === "ride" && (
         <>
@@ -2002,7 +2047,7 @@ function App() {
             {message && <p className="message">{message}</p>}
             {searchHistory.filter((h) => h.category === "ride").length > 0 && (
               <div className="recent-searches-box">
-                <span className="recent-label">Recent Searches:</span>
+                <span className="recent-label">{t("recentSearches")}:</span>
                 <div className="recent-chips">
                   {searchHistory
                     .filter((h) => h.category === "ride")
@@ -2141,29 +2186,29 @@ function App() {
   );
 }
 
-function ModuleMenu({ setActiveModule, user }) {
+function ModuleMenu({ setActiveModule, user, t }) {
   return (
     <section className="module-menu">
       <div>
-        <p className="eyebrow">Hi {user.name || "there"}</p>
-        <h1>What do you want to compare today?</h1>
+        <p className="eyebrow">{t("hiText")} {user.name || "there"}</p>
+        <h1>{t("whatCompare")}</h1>
       </div>
       <div className="module-grid">
         <button className="module-card" onClick={() => setActiveModule("ride")} type="button">
           <Navigation size={30} />
-          <span>Ride Compare</span>
-          <p>Compare Rapido, Ola, Uber and more for your route.</p>
+          <span>{t("rideCompare")}</span>
+          <p>{t("compareAggregators")}</p>
         </button>
         <button className="module-card ecommerce" onClick={() => setActiveModule("ecommerce")} type="button">
           <ShoppingBag size={30} />
-          <span>E-commerce</span>
-          <p>Compare Amazon, Flipkart and Meesho by price, rating and size.</p>
+          <span>{t("ecommerce")}</span>
+          <p>{t("compareMarketplaces")}</p>
         </button>
         {user.role === "admin" && (
           <button className="module-card admin" onClick={() => setActiveModule("admin")} type="button">
             <ShieldCheck size={30} />
-            <span>Admin Dashboard</span>
-            <p>Manage users, view searches, and check system health.</p>
+            <span>{t("adminDashboard")}</span>
+            <p>{t("adminDashboardDesc")}</p>
           </button>
         )}
       </div>
@@ -2193,12 +2238,12 @@ function EcommerceModule({
     <>
       <section className="commerce-band">
         <div>
-          <p className="eyebrow">E-commerce compare</p>
-          <h1>Search product by name or photo.</h1>
+          <p className="eyebrow">{t("ecommerceCompare")}</p>
+          <h1>{t("searchProductPlaceholder")}</h1>
         </div>
         <form className="commerce-form" onSubmit={compareProducts}>
           <label style={{ position: "relative" }}>
-            Product name or detected keywords
+            {t("productNameLabel")}
             <div className="input-icon-wrap">
               <Search size={18} />
               <input
@@ -2212,7 +2257,7 @@ function EcommerceModule({
                     productName: event.target.value
                   })
                 }
-                placeholder="Dress, shoes, watch, phone..."
+                placeholder={t("productPlaceholder")}
               />
             </div>
             {productFocused && productSuggestions.length > 0 && (
@@ -2238,9 +2283,9 @@ function EcommerceModule({
             )}
           </label>
           <label>
-            Size
+            {t("size")}
             <select value={form.size} onChange={(event) => setForm({ ...form, size: event.target.value })}>
-              <option value="any">Any size</option>
+              <option value="any">{t("anySize")}</option>
               <option value="s">Small</option>
               <option value="m">Medium</option>
               <option value="l">Large</option>
@@ -2250,13 +2295,13 @@ function EcommerceModule({
           </label>
           <label className="photo-upload">
             <Upload size={18} />
-            Upload product photo
+            {t("uploadPhoto")}
             <input accept="image/*" onChange={onPhoto} type="file" />
           </label>
           {image && <img className="product-preview" src={image} alt="Uploaded product preview" />}
           {image && (
             <div className="detected-panel">
-              <span>Detected from photo: {form.productName}</span>
+              <span>{t("detectedFromPhoto")}: {form.productName}</span>
               <div className="keyword-chips">
                 <button
                   onClick={() =>
@@ -2299,13 +2344,13 @@ function EcommerceModule({
           )}
           <button className="primary-button" disabled={loading}>
             {loading ? <Loader2 className="spin" size={18} /> : <PackageSearch size={18} />}
-            Compare products
+            {t("compareProductsBtn")}
           </button>
         </form>
         {message && <p className="message">{message}</p>}
         {searchHistory.filter((h) => h.category === "ecommerce").length > 0 && (
           <div className="recent-searches-box">
-            <span className="recent-label">Recent Searches:</span>
+            <span className="recent-label">{t("recentSearches")}:</span>
             <div className="recent-chips">
               {searchHistory
                 .filter((h) => h.category === "ecommerce")
@@ -2346,16 +2391,16 @@ function ProductResults({ results, aiConfig, token, t, onAuthError }) {
     <section className="commerce-results">
       <div className="summary">
         <div>
-          <p className="eyebrow">Product results</p>
+          <p className="eyebrow">{t("productResults")}</p>
           <h2>{results.query}</h2>
         </div>
         <div className="mini-stat">
           <IndianRupee size={18} />
-          Cheapest: Rs {results.cheapest.price}
+          {t("cheapest")}: Rs {results.cheapest.price}
         </div>
         <div className="mini-stat">
           <Star size={18} />
-          Best quality: {results.bestQuality.marketplace}
+          {t("bestQuality")}: {results.bestQuality.marketplace}
         </div>
       </div>
       <div className="product-grid">
@@ -2377,10 +2422,10 @@ function ProductResults({ results, aiConfig, token, t, onAuthError }) {
                 <p>{product.title}</p>
               </div>
               <div className="badge-container">
-                {product.isCheapest && <span className="badge cheapest-badge">Lowest Price</span>}
-                {product.isHighestRating && <span className="badge rating-badge">Top Rated</span>}
-                {product.isFastestDelivery && <span className="badge shipping-badge">Fast Delivery</span>}
-                {product.isBestValue && <span className="badge value-badge">Best Value</span>}
+                {product.isCheapest && <span className="badge cheapest-badge">{t("lowestPrice")}</span>}
+                {product.isHighestRating && <span className="badge rating-badge">{t("topRated")}</span>}
+                {product.isFastestDelivery && <span className="badge shipping-badge">{t("fastDelivery")}</span>}
+                {product.isBestValue && <span className="badge value-badge">{t("bestValue")}</span>}
               </div>
             </div>
             <div className="price-row">
@@ -2393,7 +2438,7 @@ function ProductResults({ results, aiConfig, token, t, onAuthError }) {
               Quality score {product.qualityScore}/100 · {product.shipping}
             </p>
             <a className="book-button" href={product.productUrl} target="_blank" rel="noreferrer">
-              Open {product.marketplace}
+              {t("openMarketplace")} {product.marketplace}
               <ArrowRight size={17} />
             </a>
           </article>
@@ -2466,20 +2511,20 @@ function RideResults({ results, aiConfig, token, t, onAuthError }) {
     <section className="results">
       <div className="summary">
         <div>
-          <p className="eyebrow">Estimated route</p>
+          <p className="eyebrow">{t("estimatedRoute")}</p>
           <h2>
-            {results.distanceKm} km {results.transportType === "all" ? "ride" : results.transportType} ride
+            {results.distanceKm} km {results.transportType === "all" ? t("rideCompare") : results.transportType} {t("rideCompare")}
           </h2>
         </div>
         {results.best && (
           <>
             <div className="mini-stat">
               <IndianRupee size={18} />
-              Best fare: Rs {results.best.price}
+              {t("bestFare")}: Rs {results.best.price}
             </div>
             <div className="mini-stat">
               <Clock3 size={18} />
-              Fastest pickup: {fastest.pickupMinutes} min
+              {t("fastestPickup")}: {fastest.pickupMinutes} min
             </div>
           </>
         )}
@@ -2505,10 +2550,10 @@ function RideResults({ results, aiConfig, token, t, onAuthError }) {
                 </p>
               </div>
               <div className="badge-container">
-                {ride.isCheapest && <span className="badge cheapest-badge">Cheapest</span>}
-                {ride.isFastest && <span className="badge shipping-badge">Fastest</span>}
-                {ride.isBestRated && <span className="badge rating-badge">Best Rated</span>}
-                {ride.isBestValue && <span className="badge value-badge">Best Value</span>}
+                {ride.isCheapest && <span className="badge cheapest-badge">{t("cheapestBadge")}</span>}
+                {ride.isFastest && <span className="badge shipping-badge">{t("fastestBadge")}</span>}
+                {ride.isBestRated && <span className="badge rating-badge">{t("bestRatedBadge")}</span>}
+                {ride.isBestValue && <span className="badge value-badge">{t("bestValueBadge")}</span>}
               </div>
             </div>
             <div className="price-row">
@@ -2516,11 +2561,11 @@ function RideResults({ results, aiConfig, token, t, onAuthError }) {
                 Rs {ride.minPrice} - Rs {ride.maxPrice}
               </strong>
               <span>
-                {ride.pickupMinutes} min pickup · {ride.tripMinutes} min trip
+                {ride.pickupMinutes} {t("minPickup")} · {ride.tripMinutes} {t("minTrip")}
               </span>
             </div>
             <a className="book-button" href={ride.bookUrl} target="_blank" rel="noreferrer">
-              Open {ride.provider}
+              {t("openMarketplace")} {ride.provider}
               <ArrowRight size={17} />
             </a>
           </article>
